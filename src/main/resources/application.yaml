@@ -4,3 +4,24 @@ spring:
 
 server:
   port: 8080
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, circuitbreakers
+  health:
+    circuitbreakers:
+      enabled: true
+
+resilience4j:
+  circuitbreaker:
+    instances:
+      getHelloWorld:
+        failureRateThreshold: 50  # Umbral de fallo en porcentaje (50%)
+        minimumNumberOfCalls: 5   # Número mínimo de llamadas antes de evaluar el estado
+        slidingWindowSize: 10     # Tamaño de la ventana deslizante para evaluación
+        waitDurationInOpenState: 5s  # Tiempo de espera antes de pasar a half-open
+        permittedNumberOfCallsInHalfOpenState: 3  # Llamadas permitidas en half-open
+        automaticTransitionFromOpenToHalfOpenEnabled: true
+        registerHealthIndicator: true
